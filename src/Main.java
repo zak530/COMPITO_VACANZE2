@@ -10,6 +10,7 @@ public class Main {
             System.out.println("\n--- MENU ---");
             System.out.println("1 - Inizializza CSV (miovalore + cancellato)");
             System.out.println("2 - Conta numero campi (colonne) del CSV");
+            System.out.println("3 - Lunghezza massima dei record (in caratteri)");
             System.out.println("0 - Esci");
             System.out.print("Scegli opzione: ");
 
@@ -23,6 +24,11 @@ public class Main {
                 case 2:
                     int n = Csvreader.contaCampi("elhaiki.csv");
                     System.out.println("Numero di campi (colonne): " + n);
+                    break;
+
+                case 3:
+                    int max = Csvreader.lunghezzaMassimaRecord("elhaiki.csv");
+                    System.out.println("Lunghezza massima dei record: " + max + " caratteri");
                     break;
 
                 case 0:

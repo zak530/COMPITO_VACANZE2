@@ -39,12 +39,35 @@ public class Csvreader {
 
     public static int contaCampi(String nomeFile) {
         try (BufferedReader br = new BufferedReader(new FileReader(nomeFile))) {
-
             String header = br.readLine();
             if (header == null) return 0;
 
             String[] campi = header.split(",", -1); // mantiene anche campi vuoti
             return campi.length;
+
+        } catch (IOException e) {
+            System.err.println("Errore lettura file: " + e.getMessage());
+            return 0;
+        }
+    }
+
+    // NUOVA FUNZIONE: lunghezza massima dei record (escluso header)
+    public static int lunghezzaMassimaRecord(String nomeFile) {
+        try (BufferedReader br = new BufferedReader(new FileReader(nomeFile))) {
+
+            // salto l'header
+            String line = br.readLine();
+            if (line == null) return 0;
+
+            int maxLen = 0;
+
+            // scorro i record
+            while ((line = br.readLine()) != null) {
+                int len = line.length();
+                if (len > maxLen) maxLen = len;
+            }
+
+            return maxLen;
 
         } catch (IOException e) {
             System.err.println("Errore lettura file: " + e.getMessage());
