@@ -1,3 +1,4 @@
+// Main.java
 import java.util.Scanner;
 
 public class Main {
@@ -7,7 +8,8 @@ public class Main {
 
         do {
             System.out.println("\n--- MENU ---");
-            System.out.println("1 - Inizializza CSV (miovalore + deleted)");
+            System.out.println("1 - Inizializza CSV (miovalore + cancellato)");
+            System.out.println("2 - Conta numero campi (colonne) del CSV");
             System.out.println("0 - Esci");
             System.out.print("Scegli opzione: ");
 
@@ -17,9 +19,16 @@ public class Main {
                 case 1:
                     Csvreader.inizializzaCsv("elhaiki.csv");
                     break;
+
+                case 2:
+                    int n = Csvreader.contaCampi("elhaiki.csv");
+                    System.out.println("Numero di campi (colonne): " + n);
+                    break;
+
                 case 0:
                     System.out.println("Uscita dal programma");
                     break;
+
                 default:
                     System.out.println("Opzione non valida");
             }
