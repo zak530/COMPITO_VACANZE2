@@ -7,12 +7,13 @@ public class Main {
 
         do {
             System.out.println("\n--- MENU ---");
-            System.out.println("1 - Inizializza CSV (miovalore + cancellato)");
-            System.out.println("2 - Conta numero campi (colonne) del CSV");
-            System.out.println("3 - Lunghezza massima dei record (in caratteri)");
-            System.out.println("4 - Rendi record a dimensione fissa (padding spazi)");
+            System.out.println("1 - Inizializza CSV");
+            System.out.println("2 - Conta campi");
+            System.out.println("3 - Lunghezza massima record");
+            System.out.println("4 - Record a dimensione fissa");
+            System.out.println("5 - Aggiungi record in coda");
             System.out.println("0 - Esci");
-            System.out.print("Scegli opzione: ");
+            System.out.print("Scelta: ");
 
             opzione = Integer.parseInt(in.next());
 
@@ -21,18 +22,19 @@ public class Main {
                     Csvreader.inizializzaCsv("elhaiki.csv");
                     break;
                 case 2:
-                    int n = Csvreader.contaCampi("elhaiki.csv");
-                    System.out.println("Numero di campi (colonne): " + n);
+                    System.out.println(Csvreader.contaCampi("elhaiki.csv"));
                     break;
                 case 3:
-                    int max = Csvreader.lunghezzaMassimaRecord("elhaiki.csv");
-                    System.out.println("Lunghezza massima dei record: " + max + " caratteri");
+                    System.out.println(Csvreader.lunghezzaMassimaRecord("elhaiki.csv"));
                     break;
                 case 4:
                     Csvreader.rendiRecordFissi("elhaiki.csv", "elhaiki_fisso.csv");
                     break;
+                case 5:
+                    in.nextLine();
+                    Csvreader.aggiungiRecord("elhaiki.csv");
+                    break;
                 case 0:
-                    System.out.println("Uscita dal programma");
                     break;
                 default:
                     System.out.println("Opzione non valida");
@@ -40,6 +42,5 @@ public class Main {
         } while (opzione != 0);
 
         in.close();
-        System.out.println("Fine programma");
     }
 }

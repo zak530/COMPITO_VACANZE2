@@ -1,5 +1,6 @@
 import java.io.*;
 import java.util.Random;
+import java.util.Scanner;
 
 public class Csvreader {
 
@@ -17,7 +18,6 @@ public class Csvreader {
                 bw.write(line + ",miovalore,cancellato");
                 bw.newLine();
             } else {
-                System.out.println("File vuoto: " + inputFile);
                 return;
             }
 
@@ -27,10 +27,8 @@ public class Csvreader {
                 bw.newLine();
             }
 
-            System.out.println("Elaborazione completata. File salvato come: " + outputFile);
-
         } catch (IOException e) {
-            System.err.println("Errore durante l'elaborazione del file: " + e.getMessage());
+            System.err.println(e.getMessage());
         }
     }
 
@@ -38,10 +36,8 @@ public class Csvreader {
         try (BufferedReader br = new BufferedReader(new FileReader(nomeFile))) {
             String header = br.readLine();
             if (header == null) return 0;
-            String[] campi = header.split(",", -1);
-            return campi.length;
+            return header.split(",", -1).length;
         } catch (IOException e) {
-            System.err.println("Errore lettura file: " + e.getMessage());
             return 0;
         }
     }
@@ -51,14 +47,12 @@ public class Csvreader {
             String line = br.readLine();
             if (line == null) return 0;
 
-            int maxLen = 0;
+            int max = 0;
             while ((line = br.readLine()) != null) {
-                int len = line.length();
-                if (len > maxLen) maxLen = len;
+                if (line.length() > max) max = line.length();
             }
-            return maxLen;
+            return max;
         } catch (IOException e) {
-            System.err.println("Errore lettura file: " + e.getMessage());
             return 0;
         }
     }
@@ -67,64 +61,80 @@ public class Csvreader {
         try (BufferedReader br = new BufferedReader(new FileReader(inputFile))) {
 
             String headerLine = br.readLine();
-            if (headerLine == null) {
-                System.out.println("File vuoto: " + inputFile);
-                return;
-            }
+            if (headerLine == null) return;
 
             String[] header = headerLine.split(",", -1);
             int cols = header.length;
-
             int[] maxLen = new int[cols];
-            for (int c = 0; c < cols; c++) maxLen[c] = header[c].length();
+
+            for (int i = 0; i < cols; i++) maxLen[i] = header[i].length();
 
             String line;
             while ((line = br.readLine()) != null) {
-                String[] fields = line.split(",", -1);
-                for (int c = 0; c < cols; c++) {
-                    String v = (c < fields.length) ? fields[c] : "";
-                    if (v.length() > maxLen[c]) maxLen[c] = v.length();
+                String[] f = line.split(",", -1);
+                for (int i = 0; i < cols; i++) {
+                    String v = i < f.length ? f[i] : "";
+                    if (v.length() > maxLen[i]) maxLen[i] = v.length();
                 }
             }
 
             try (BufferedReader br2 = new BufferedReader(new FileReader(inputFile));
                  BufferedWriter bw = new BufferedWriter(new FileWriter(outputFile))) {
 
-                String header2 = br2.readLine();
-                String[] h2 = header2.split(",", -1);
-
-                bw.write(padRow(h2, maxLen));
+                String[] h = br2.readLine().split(",", -1);
+                bw.write(padRow(h, maxLen));
                 bw.newLine();
 
                 while ((line = br2.readLine()) != null) {
-                    String[] fields = line.split(",", -1);
-                    bw.write(padRow(fields, maxLen));
+                    bw.write(padRow(line.split(",", -1), maxLen));
                     bw.newLine();
                 }
             }
 
-            System.out.println("Record resi a dimensione fissa. File salvato come: " + outputFile);
-
         } catch (IOException e) {
-            System.err.println("Errore durante l'elaborazione del file: " + e.getMessage());
+            System.err.println(e.getMessage());
         }
     }
 
     private static String padRow(String[] fields, int[] maxLen) {
         StringBuilder sb = new StringBuilder();
-        for (int c = 0; c < maxLen.length; c++) {
-            String v = (c < fields.length && fields[c] != null) ? fields[c] : "";
-            sb.append(padRight(v, maxLen[c]));
-            if (c < maxLen.length - 1) sb.append(",");
+        for (int i = 0; i < maxLen.length; i++) {
+            String v = i < fields.length ? fields[i] : "";
+            sb.append(padRight(v, maxLen[i]));
+            if (i < maxLen.length - 1) sb.append(",");
         }
         return sb.toString();
     }
 
-    private static String padRight(String s, int width) {
-        if (s == null) s = "";
-        if (s.length() >= width) return s;
+    private static String padRight(String s, int w) {
+        if (s.length() >= w) return s;
         StringBuilder sb = new StringBuilder(s);
-        while (sb.length() < width) sb.append(' ');
+        while (sb.length() < w) sb.append(" ");
         return sb.toString();
+    }
+
+    public static void aggiungiRecord(String nomeFile) {
+        try (BufferedReader br = new BufferedReader(new FileReader(nomeFile))) {
+
+            String header = br.readLine();
+            if (header == null) return;
+
+            int campi = header.split(",", -1).length;
+            Scanner in = new Scanner(System.in);
+            String[] nuovo = new String[campi];
+
+            for (int i = 0; i < campi; i++) {
+                System.out.print("Campo " + (i + 1) + ": ");
+                nuovo[i] = in.nextLine();
+            }
+
+            try (BufferedWriter bw = new BufferedWriter(new FileWriter(nomeFile, true))) {
+                bw.newLine();
+                bw.write(String.join(",", nuovo));
+            }
+
+        } catch (IOException e) {
+            System.err.println(e.getMessage());
+        }
     }
 }
