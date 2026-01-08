@@ -12,6 +12,7 @@ public class Main {
             System.out.println("3 - Lunghezza massima record");
             System.out.println("4 - Record a dimensione fissa");
             System.out.println("5 - Aggiungi record in coda");
+            System.out.println("6 - Cerca record per campo chiave");
             System.out.println("0 - Esci");
             System.out.print("Scelta: ");
 
@@ -33,6 +34,10 @@ public class Main {
                 case 5:
                     in.nextLine();
                     Csvreader.aggiungiRecord("elhaiki.csv");
+                    break;
+                case 6:
+                    in.nextLine();
+                    Csvreader.cercaRecordPerChiave("elhaiki.csv");
                     break;
                 case 0:
                     break;

@@ -115,7 +115,6 @@ public class Csvreader {
 
     public static void aggiungiRecord(String nomeFile) {
         try (BufferedReader br = new BufferedReader(new FileReader(nomeFile))) {
-
             String header = br.readLine();
             if (header == null) return;
 
@@ -131,6 +130,56 @@ public class Csvreader {
             try (BufferedWriter bw = new BufferedWriter(new FileWriter(nomeFile, true))) {
                 bw.newLine();
                 bw.write(String.join(",", nuovo));
+            }
+
+        } catch (IOException e) {
+            System.err.println(e.getMessage());
+        }
+    }
+
+    public static void cercaRecordPerChiave(String nomeFile) {
+        try (BufferedReader br = new BufferedReader(new FileReader(nomeFile))) {
+
+            String headerLine = br.readLine();
+            if (headerLine == null) return;
+
+            String[] header = headerLine.split(",", -1);
+            int cols = header.length;
+
+            Scanner in = new Scanner(System.in);
+            System.out.println("Colonne disponibili:");
+            for (int i = 0; i < cols; i++) {
+                System.out.println((i + 1) + " - " + header[i]);
+            }
+
+            System.out.print("Scegli numero colonna chiave: ");
+            int keyCol = Integer.parseInt(in.nextLine()) - 1;
+
+            if (keyCol < 0 || keyCol >= cols) {
+                System.out.println("Colonna non valida");
+                return;
+            }
+
+            System.out.print("Inserisci valore chiave da cercare: ");
+            String keyValue = in.nextLine().trim();
+
+            String line;
+            boolean trovato = false;
+
+            while ((line = br.readLine()) != null) {
+                String[] fields = line.split(",", -1);
+                String v = keyCol < fields.length ? fields[keyCol].trim() : "";
+
+                if (v.equals(keyValue)) {
+                    System.out.println("Record trovato:");
+                    System.out.println(line);
+                    trovato = true;
+                    break;
+                }
+            }
+
+            if (!trovato) {
+                System.out.println("Nessun record trovato");
             }
 
         } catch (IOException e) {
