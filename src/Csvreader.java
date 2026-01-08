@@ -3,8 +3,8 @@ import java.util.Random;
 
 public class Csvreader {
     public static void inizializzaCsv(String nomeFile) {
-        String inputFile = nomeFile;
-        String outputFile = nomeFile.replace(".csv", "_modificato.csv");
+        String inputFile = "elhaiki.csv";
+        String outputFile = "elhaiki_modificato2.csv";
         Random random = new Random();
 
         try (BufferedReader br = new BufferedReader(new FileReader(inputFile));
